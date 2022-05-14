@@ -61,6 +61,8 @@ namespace PeliculasAPI.Controllers
                 }
             }
 
+            AsignarOrdenActores(pelicula);
+
             context.Add(pelicula);
             await context.SaveChangesAsync();
 
@@ -72,7 +74,10 @@ namespace PeliculasAPI.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromForm] PeliculasCreacionDTO peliculasCreacionDTO)
         {
-            var peliculaDB = await context.Peliculas.FirstOrDefaultAsync(x => x.Id == id);
+            var peliculaDB = await context.Peliculas
+                .Include(x => x.PeliculasActores)
+                .Include(x => x.PeliculasGeneros)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             if (peliculaDB == null)
             {
@@ -91,6 +96,8 @@ namespace PeliculasAPI.Controllers
                     peliculaDB.Poster = await almacenadorArchivos.EditarArchivo(contenido, extension, contenedor, peliculaDB.Poster, peliculasCreacionDTO.Poster.ContentType);
                 }
             }
+
+            AsignarOrdenActores(peliculaDB);
 
             await context.SaveChangesAsync();
 
@@ -144,6 +151,17 @@ namespace PeliculasAPI.Controllers
             await context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        private void AsignarOrdenActores(Pelicula pelicula)
+        {
+            if (pelicula.PeliculasActores != null)
+            {
+                for (int i = 0; i < pelicula.PeliculasActores.Count; i++)
+                {
+                    pelicula.PeliculasActores[i].Orden = i;
+                }
+            }
         }
     }
 }
