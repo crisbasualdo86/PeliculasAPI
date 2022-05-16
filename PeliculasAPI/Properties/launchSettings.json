@@ -12,7 +12,7 @@
     "PeliculasAPI": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "weatherforecast",
+      "launchUrl": "api/peliculas",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
