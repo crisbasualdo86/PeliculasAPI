@@ -26,7 +26,7 @@ namespace PeliculasAPI.Controllers
             return dtos;
         }
 
-        protected async Task<List<TDTO>> Get<TEntidad, TDTO>(PaginacionDTO paginacionDTO) where TEntidad : class, IId
+        protected async Task<List<TDTO>> Get<TEntidad, TDTO>(PaginacionDTO paginacionDTO) where TEntidad : class
         {
             var queryble = context.Set<TEntidad>().AsQueryable();
 

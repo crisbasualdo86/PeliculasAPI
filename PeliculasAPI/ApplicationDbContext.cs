@@ -1,11 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.Entidades;
+using System.Security.Claims;
 
 namespace PeliculasAPI
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -29,6 +32,44 @@ namespace PeliculasAPI
 
         private void SeedData(ModelBuilder modelBuilder)
         {
+            var rolAdminId = "d4ac8114-753a-4db7-9463-5cbcf571ef8f";
+            var usuarioAdminId = "64bb3cab-55e5-4560-8757-503137e9a81c";
+
+            var rolAdmin = new IdentityRole
+            {
+                Id = rolAdminId,
+                Name = "Admin",
+                NormalizedName = "Admin"
+            };
+
+            var passwordHasher = new PasswordHasher<IdentityUser>();
+
+            var userName = "crisbasualdo86@hotmail.com";
+
+            var usuarioAdmin = new IdentityUser
+            {
+                Id = usuarioAdminId,
+                UserName = userName,
+                NormalizedUserName = userName,
+                Email = userName,
+                NormalizedEmail = userName,
+                PasswordHash = passwordHasher.HashPassword(null, "Aa123456!")
+            };
+
+            //modelBuilder.Entity<IdentityUser>()
+            //    .HasData(usuarioAdmin);
+
+            //modelBuilder.Entity<IdentityRole>()
+            //    .HasData(rolAdmin);
+
+            //modelBuilder.Entity<IdentityUserClaim<string>>()
+            //    .HasData(new IdentityUserClaim<string>
+            //    {
+            //        Id = 1,
+            //        ClaimType = ClaimTypes.Role,
+            //        UserId = usuarioAdminId,
+            //        ClaimValue = "Admin"
+            //    });
 
             var geometryFactory = NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326);
 
